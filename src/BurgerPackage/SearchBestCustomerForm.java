@@ -190,8 +190,8 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
 //        }
     }//GEN-LAST:event_tblBestCustomerFocusGained
 
-  //test
-   
+
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
     private javax.swing.JPanel jPanel1;
