@@ -132,51 +132,37 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
           try {
              BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
              DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
-              dtm.setRowCount(0);
-              String line=br.readLine();
+             dtm.setRowCount(0);
+             String line=br.readLine();
+
               
-              FileWriter dupRemovefile = new FileWriter("dupRemoveFile.txt");
-              Scanner input = new Scanner(new File("dupRemoveFile.txt"));
-               String dupline = input.nextLine();
-              
-              
-                  
-             
-              
-              while(line!=null){
+            while(line!=null){
                   
                   String[] rowData = line.split(",");
                   String cusID = rowData[1];
                   
-                  String[] dupRowData;
+                  boolean duplicate = false;
+                  BufferedReader checkBr = new BufferedReader(new FileReader("dupRemoveFile.txt"));
+                  String checkLine;
                   
-                  if(input.hasNext()==true) {
-                      
-                      while(input.hasNext()){
-                        dupRowData = dupline.split(",");
-                        String dupCusID = dupRowData[1];
-                      
-                  
-                     
-                    if(line.length()>=16){
-                     
-                    if(line.substring(6,16).equals(dupCusID)){
-                    
-                    }else{
-                         dupRemovefile.write(rowData[0]+","+rowData[1]+","+rowData[2]+","+rowData[3]+"\n");
-                    }
-                    
-                          }
-                    
-                 line = br.readLine();
+                  while((checkLine=checkBr.readLine())!=null){
+                      if(checkLine.equals(cusID)){
+                          duplicate = true;
+                          break;
                       }
-              }else{
-                  dupRemovefile.write(rowData[0]+","+rowData[1]+","+rowData[2]+","+rowData[3]+"\n");
                   }
+                  if(!duplicate){
+                          FileWriter dupRemovefile = new FileWriter("dupRemoveFile.txt",true);
+                          dupRemovefile.write(cusID+"\n");
+                          dupRemovefile.close();
+                      }
+                      line=br.readLine();
+                   
             }
-               br.close();
-               dupRemovefile.close();
+                br.close();
+   
          } catch (IOException ex) {
+             
          }
                
                
