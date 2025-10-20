@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.InputMap;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -130,15 +132,18 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
 
     private void tblBestCustomerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblBestCustomerFocusGained
           try {
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-             DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
-             dtm.setRowCount(0);
-             String line=br.readLine();
+            BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
+            DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
+            dtm.setRowCount(0);
+            String line=br.readLine();
 
-              
+            new FileWriter("dupRemoveFile.txt", true).close();
+             
             while(line!=null){
                   
                   String[] rowData = line.split(",");
+                  
+                   if (rowData.length > 1) {
                   String cusID = rowData[1];
                   
                   boolean duplicate = false;
@@ -156,11 +161,50 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
                           dupRemovefile.write(cusID+"\n");
                           dupRemovefile.close();
                       }
-                      line=br.readLine();
+                  }
+                  line=br.readLine();
                    
             }
-                br.close();
-   
+            br.close();
+            
+            //-----------------------------------------------------------------------------------------------
+            BufferedReader findBr = new BufferedReader (new FileReader("dupRemoveFile.txt"));
+            String findLine = findBr.readLine();
+            
+             List<String> burgerData = new ArrayList<>();
+             BufferedReader findCus = new BufferedReader(new FileReader("Burger.txt"));
+             String cusLine = findCus.readLine();
+             
+             while(cusLine!=null){
+                burgerData.add(cusLine);
+                cusLine = findCus.readLine();
+            }
+            findCus.close();
+               
+                
+            FileWriter tempTotal = new FileWriter("temp.txt",true);
+            while(findLine!=null){
+                int totalQty = 0;
+                String name ="";
+                for (String burgerLine : burgerData) {
+                    String[] ar = burgerLine.split(",");
+                    if(ar.length>=4 && findLine.equals(ar[1])){
+                        totalQty += Integer.parseInt(ar[3]);
+                        name = ar[2];
+                    }
+                        
+                  
+              }
+                    String quantity = String.format("%d",totalQty);
+                    tempTotal.write(findLine+","+name+","+quantity+"\n");
+                    findLine = findBr.readLine();
+                    
+                   
+                }
+                tempTotal.close();
+                findBr.close();
+            
+           
          } catch (IOException ex) {
              
          }
