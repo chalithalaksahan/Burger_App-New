@@ -6,6 +6,7 @@
 package BurgerPackage;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,6 +15,7 @@ import java.util.Scanner;
 import javax.swing.InputMap;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -133,8 +135,6 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
     private void tblBestCustomerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblBestCustomerFocusGained
           try {
             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-            DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
-            dtm.setRowCount(0);
             String line=br.readLine();
 
             new FileWriter("dupRemoveFile.txt", true).close();
@@ -182,7 +182,8 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
             findCus.close();
                
                 
-            FileWriter tempTotal = new FileWriter("temp.txt",true);
+            BufferedWriter tempTotal = new BufferedWriter(new FileWriter("temp.txt"));
+            
             while(findLine!=null){
                 int totalQty = 0;
                 String name ="";
@@ -194,7 +195,7 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
                     }
                         
                   
-              }
+                }
                     String quantity = String.format("%d",totalQty);
                     tempTotal.write(findLine+","+name+","+quantity+"\n");
                     findLine = findBr.readLine();
@@ -203,15 +204,55 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
                 }
                 tempTotal.close();
                 findBr.close();
+           // ----------------------------------------------------------------------------------------------------------------
+           
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader("temp.txt"));
+            String line1;
             
+            
+           while ((line1 = reader.readLine()) != null) {
+                lines.add(line1);
+            }
+            reader.close();
+            
+                lines.sort((a, b) -> {
+                int qtyA = Integer.parseInt(a.split(",")[2]);
+                int qtyB = Integer.parseInt(b.split(",")[2]);
+                return qtyB - qtyA; 
+            });
+            BufferedWriter writer = new BufferedWriter(new FileWriter("sorted_file.txt"));
+            for (String sortedLine : lines) {
+                writer.write(sortedLine);
+                writer.newLine();
+            }
+            writer.close();
+            
+        BufferedReader brTable =new BufferedReader(new FileReader("sorted_file.txt"));       
+        DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
+        dtm.setRowCount(0);
+        String tblLine = brTable.readLine();
+        
+          while(tblLine!=null){
+                 
+                  String[] rowData = tblLine.split(",");
+                    if(tblLine.length()>=16){
+                    
+                       String total = String.format("%.2f", (Integer.parseInt(rowData[2])*Burger.burgerPrice));
+                       String[] rowData1={rowData[0],rowData[1],total};
+                       dtm.addRow(rowData1);
+                    
+                  }
+                 tblLine = brTable.readLine();
+              
+              }
+          brTable.close();
            
          } catch (IOException ex) {
              
          }
-               
-               
-//        DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
-//        dtm.setRowCount(0);
+        //--------------------------------------------------------------------------------------------------------------------------       
+       
 //        Burger[] burgerArray=burgerList.findBestCustomer();
 //    
 //        for (Burger burger : burgerArray) {
