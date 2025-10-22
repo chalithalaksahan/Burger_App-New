@@ -113,17 +113,7 @@ public class Burger {
     public void setOrderStatus(int orderStatus) {
         this.orderStatus = orderStatus;
     }
-
-    boolean equalsIgnoreCase(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
-
-    
-
-   
-    
-    
+  
     
    
 }
