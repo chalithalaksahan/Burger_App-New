@@ -5,6 +5,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+class Node{
+    private Burger burger;
+    private Node next;
+    public Node(Burger burger){
+        this.burger=burger;
+    }
+}
 
 class BurgerList {
 
