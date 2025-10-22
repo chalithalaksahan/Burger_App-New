@@ -5,13 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-class Node{
-    private Burger burger;
-    private Node next;
-    public Node(Burger burger){
-        this.burger=burger;
-    }
-}
+
 
 class BurgerList {
 
@@ -26,7 +20,14 @@ class BurgerList {
         initSize = 100;
         burgerArray = new Burger[initSize];
     }
-
+    
+    class Node{
+    private Burger burger;
+    private Node next;
+    public Node(Burger burger){
+        this.burger=burger;
+        }
+    }
     public BurgerList(int initSize, double loadFact) {
         burgerArray = new Burger[initSize];
         this.loadFact = loadFact;
