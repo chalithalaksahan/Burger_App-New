@@ -1,134 +1,62 @@
 
 package BurgerPackage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
 
 
 class BurgerList {
 
-    private Burger[] burgerArray;
-    private int nextIndex;
-    private final double loadFact;
-    private final int initSize;
+    private Node first;
 
-    public BurgerList() {
-        nextIndex = 0;
-        loadFact = 0.5;
-        initSize = 100;
-        burgerArray = new Burger[initSize];
+    public boolean add(int index,Burger burger) {
+        if(index>=0 && index<=size()){
+            Node node = new Node(burger);
+            if(index==0){
+               node.next=first;
+                first=node;
+            }else{
+            int count=0;
+            Node temp = first;
+            while(count<index-1){
+                temp=temp.next;
+            }
+            node.next=temp.next;
+            temp.next=node;
+            }
+               return true;
+        }
+        return false;
+    }
+    public int size(){
+        int count=0;
+        Node temp=first;
+        while(temp!=null){
+            temp=temp.next;
+            count++;
+        }
+        return count;
+    }
+    
+    public void printBurgers(){
+        System.out.print("{");
+        Node temp=first;
+        while(temp!=null){
+            Burger burger = temp.burger;
+            System.out.print(burger.toString()+", ");
+            temp=temp.next;
+        }
+        System.out.println(isEmpty ? "Empty" : "\b\b}");
+    }
+    public boolean isEmpty(){
+        return first==null;
     }
     
     class Node{
-    private Burger burger;
-    private Node next;
-    public Node(Burger burger){
-        this.burger=burger;
+        private Burger burger;
+        private Node next;
+        
+        public Node(Burger burger){
+            this.burger=burger;
         }
-    }
-    public BurgerList(int initSize, double loadFact) {
-        burgerArray = new Burger[initSize];
-        this.loadFact = loadFact;
-        nextIndex = 0;
-        this.initSize = initSize;
-    }
-
-    public void add(Burger burger) {
-        if (nextIndex >= burgerArray.length) {
-            extendsArray();
-        }
-        burgerArray[nextIndex++] = burger;
-    }
-
-    public void addLast(Burger burger) {
-        add(burger);
-    }
-
-    public void addFirst(Burger burger) {
-        add(0, burger);
-    }
-
-    public void add(int index, Burger burger) {
-        if (index >= 0 && index <= nextIndex) {
-            for (int i = nextIndex - 1; i >= index; i--) {
-                burgerArray[i + 1] = burgerArray[i];
-            }
-            burgerArray[index] = burger;
-            nextIndex++;
-        }
-    }
-
-    public void removeFirst() {
-        remove(0);
-    }
-
-    public void removeLast() {
-        remove(nextIndex - 1);
-    }
-
-    public void remove(int index) {
-        if (index >= 0 && index < nextIndex) {
-            for (int i = index; i < nextIndex - 1; i++) {
-                burgerArray[i] = burgerArray[i + 1];
-            }
-            nextIndex--;
-        }
-    }
-
-    public Burger get(int index) {
-        return index >= 0 && index < nextIndex ? burgerArray[index] : null;
-    }
-
-    public void printList() {
-        System.out.print("[");
-        for (int i = 0; i < nextIndex; i++) {
-            System.out.print(burgerArray[i] + ", ");
-        }
-        System.out.println(isEmpty() ? "empty]" : "\b\b]");
-    }
-
-    private void extendsArray() {
-        Burger[] tempBurgerArray = new Burger[(int) (burgerArray.length * (loadFact + 1))];
-        for (int i = 0; i < burgerArray.length; i++) {
-            tempBurgerArray[i] = burgerArray[i];
-        }
-        burgerArray = tempBurgerArray;
-    }
-
-    public boolean isEmpty() {
-        return nextIndex <= 0;
-    }
-
-    public int size() {
-        return nextIndex;
-    }
-
-    public boolean contains(Burger burger) {
-        return indexOf(burger) != -1;
-    }
-
-    public int indexOf(Burger burger) {
-        for (int i = 0; i < nextIndex; i++) {
-            if (burgerArray[i] == burger) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public Burger[] toArray() {
-        Burger[] tempDataArray = new Burger[nextIndex];
-        for (int i = 0; i < nextIndex; i++) {
-            tempDataArray[i] = burgerArray[i];
-        }
-        return tempDataArray;
-    }
-
-    public void clear() {
-        nextIndex = 0;
-        burgerArray = new Burger[initSize];
     }
     
     
