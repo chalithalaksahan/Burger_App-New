@@ -114,6 +114,9 @@ public class Burger {
         this.orderStatus = orderStatus;
     }
   
-    
+    @Override
+    public String toString(){
+        return OrderId+","+customerId+","+CustomerName+","+orderQty+","+orderStatus;
+    }
    
 }
