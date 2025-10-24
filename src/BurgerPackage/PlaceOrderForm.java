@@ -6,17 +6,8 @@
 package BurgerPackage;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 
 
@@ -36,7 +27,7 @@ public class PlaceOrderForm extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setTitle("Place Order");
         this.burgerList=burgerList;
-        txtOrderId.setText(this.burgerList.generateBurgerId());
+        txtOrderId.setText(BurgerController.generateBurgerId());
         txtOrderTotal.setBorder(null);
         txtOrderStatus.setBorder(null);
         txtOrderId.setBorder(null);
@@ -347,21 +338,18 @@ public class PlaceOrderForm extends javax.swing.JFrame {
             int res = JOptionPane.showConfirmDialog(this, "Do you want to add?","New Burger",JOptionPane.YES_NO_OPTION);
             if(res==JOptionPane.YES_OPTION){
                 try {
-                        FileWriter fw = new FileWriter("Burger.txt",true);
-                        fw.write(id+","+cusId+","+cusName+","+OrderQty+","+"0"+"\n");
-                        fw.close();
+                       boolean isAdded = BurgerController.addNewBurger(burger);
+                       if(isAdded){
+                                JOptionPane.showMessageDialog(this, "Added Success");
+                                txtOrderId.setText(BurgerController.generateBurgerId());
+                                txtCustomerId.setText(id);
+                                txtCustomerId.setText("");
+                                txtCustomerName.setText("");
+                                txtOrderQty.setText("0");
+                                txtOrderTotal.setText("");
+                       }
                     } catch (IOException ex) {
-
-                }
-               
-                JOptionPane.showMessageDialog(this, "Added Success");
-                txtOrderId.setText(burgerList.generateBurgerId());
-                txtCustomerId.setText(id);
-                txtCustomerId.setText("");
-                txtCustomerName.setText("");
-                txtOrderQty.setText("0");
-                txtOrderTotal.setText("");
-                
+                }  
             }
            
             
@@ -396,43 +384,24 @@ public class PlaceOrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCustomerIdActionPerformed
 
     private void txtCustomerIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustomerIdKeyReleased
-         String CustomerName="";
         if(txtCustomerId.getText().length()==10 && txtCustomerId.getText().charAt(0)=='0'){
             String customerId = txtCustomerId.getText();
            
-          try {
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-            
-              String line=br.readLine();
-              
-              while(line!=null){
-                 
-                  String[] rowData = line.split(",");
-                    if(line.length()>=16){
-                    if(line.substring(6,16).equals(customerId)){
-                        CustomerName = rowData[2];
-                       int res=JOptionPane.showConfirmDialog(this,"Do you want to add this \n customer "+CustomerName, "Existing Customer", JOptionPane.YES_NO_OPTION);
+        String customerName = BurgerController.isCustomerExist(customerId);
+        
+        if(!customerName.equalsIgnoreCase("null")){
+             int res=JOptionPane.showConfirmDialog(this,"Do you want to add this \n customer "+customerName, "Existing Customer", JOptionPane.YES_NO_OPTION);
                         if(res==JOptionPane.YES_OPTION){
-                            txtCustomerName.setText(rowData[2]); 
+                            txtCustomerName.setText(customerName); 
                             txtOrderQty.setText("0");
                             txtOrderQty.requestFocus();
                         }else{
                             txtCustomerName.requestFocus();
                         }
-                      break;
-                    }
-                  }
-                 line = br.readLine();
-              
-              }
-               br.close();
-         
-         } catch (IOException ex) {
-         }
-          
-      }else{
-         
-       }
+        }else{
+            txtCustomerName.requestFocus();
+        }
+      }
     }//GEN-LAST:event_txtCustomerIdKeyReleased
 
     private void txtCustomerIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustomerIdKeyTyped
