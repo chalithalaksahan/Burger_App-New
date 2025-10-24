@@ -1,10 +1,6 @@
 
 package BurgerPackage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
 
 
 class BurgerList {
@@ -118,50 +114,6 @@ class BurgerList {
         int index=indexOf(burger);
         return remove(index);
     }
-    class Node{
-        private Burger burger;
-        private Node next;
-        
-        public Node(Burger burger){
-            this.burger=burger;
-        }
-    }
-    
-    
-    
-    
-    public String generateBurgerId(){
-        String lastId = "O0001";
-        try {
-             String PrepairId = String.format("%d",Burger.DELIVERED);
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-            
-              String line=br.readLine();
-              
-              while(line!=null){
-                 
-                  String[] rowData = line.split(",");
-                    if(line.length()>=16){
-                    lastId=String.format("O%04d",(Integer.parseInt(rowData[0].substring(1,5)))+1);
-                    
-                  }
-                 line = br.readLine();
-                 
-              }
-               br.close();
-         } catch (IOException ex) {
-         }
-        return lastId;
-    }  
-    
-//    public String searchCustomerId(String customerId){
-//        for (Burger burger : burgerArray) {
-//            if(burger.getCustomerId().equalsIgnoreCase(customerId)){
-//                return burger.getCustomerName();
-//            }
-//        }
-//        return null;
-//    }
     public String getTotal(int OrderQty){
         double total =  (OrderQty*Burger.burgerPrice);
         String Total =  String.format("%.2f", total);
@@ -176,6 +128,51 @@ class BurgerList {
 		return false;
 		
     }
+    class Node{
+        private Burger burger;
+        private Node next;
+        
+        public Node(Burger burger){
+            this.burger=burger;
+        }
+    }
+    
+    
+    
+    
+//    public String generateBurgerId(){
+//        String lastId = "O0001";
+//        try {
+//           
+//             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
+//            
+//              String line=br.readLine();
+//              
+//              while(line!=null){
+//                 
+//                  String[] rowData = line.split(",");
+//                    if(line.length()>=16){
+//                    lastId=String.format("O%04d",(Integer.parseInt(rowData[0].substring(1,5)))+1);
+//                    
+//                  }
+//                 line = br.readLine();
+//                 
+//              }
+//               br.close();
+//         } catch (IOException ex) {
+//         }
+//        return lastId;
+//    }  
+    
+//    public String searchCustomerId(String customerId){
+//        for (Burger burger : burgerArray) {
+//            if(burger.getCustomerId().equalsIgnoreCase(customerId)){
+//                return burger.getCustomerName();
+//            }
+//        }
+//        return null;
+//    }
+    
 //    public Burger[] findBestCustomer() {
 //    Burger[] dra = new Burger[0];
 //    
