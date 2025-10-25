@@ -5,12 +5,6 @@
 
 package BurgerPackage;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -272,28 +266,16 @@ public class SearchOrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTotalActionPerformed
 
     private void txtOrderIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOrderIdActionPerformed
-            String orderId=txtOrderId.getText();
-
-         try {
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-                String line=br.readLine();
-                while(line!=null){
-                    if(line.substring(0,5).equals(orderId)){
-                        break;
-                    }
-                    line=br.readLine();
-                }
-             
-             if(line==null){
-                 JOptionPane.showMessageDialog(this, orderId+"Order Id not found..");
-             }else{
-                 String[] rowData = line.split(",");
-                 txtCustomerId.setText(rowData[1]);
-                 txtCustomerName.setText(rowData[2]);
-                  txtOrderQty.setText(rowData[3]+"");
-                double Total = Integer.parseInt(rowData[3])*Burger.burgerPrice;
+           String newOrderId=txtOrderId.getText().trim();  
+           Burger burger = BurgerController.searchOrder(newOrderId);
+          
+           if(burger!=null){
+                 txtCustomerId.setText(burger.getCustomerId());
+                 txtCustomerName.setText(burger.getCustomerName());
+                 txtOrderQty.setText(burger.getOrderQty()+"");
+                double Total = burger.getOrderQty()*Burger.burgerPrice;
                 txtTotal.setText(String.format("%.2f", Total));
-                switch (Integer.parseInt(rowData[4])) {
+                switch (burger.getOrderStatus()) {
                     case Burger.PREPARING:
                         txtOrderStatus.setText("PREPARING");
 
@@ -308,62 +290,25 @@ public class SearchOrderForm extends javax.swing.JFrame {
                         break;
                     default:
                         break;
+                        
                 }
-             }
-             
-             
-             
-//        String order_id = txtOrderId.getText();
-//        Burger burger=burgerList.searchBurger(order_id);
-//        if(burger!=null){
-//            txtCustomerId.setText(burger.getCustomerId());
-//            txtCustomerName.setText(burger.getCustomerName());
-//            txtOrderQty.setText(burger.getOrderQty()+"");
-//            double Total = burger.getOrderQty()*Burger.burgerPrice;
-//            txtTotal.setText(String.format("%.2f", Total));
-//            switch (burger.getOrderStatus()) {
-//                case Burger.PREPARING:
-//                    txtOrderStatus.setText("PREPARING");
-//                    
-//                    break;
-//                case Burger.DELIVERED:
-//                    txtOrderStatus.setText("DELIVERED");
-//                    
-//                    break;
-//                case Burger.CANCEL:
-//                    txtOrderStatus.setText("CANCEL");
-//                    
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-         } catch (IOException ex) {
-            
-         }
+           }else{
+                JOptionPane.showMessageDialog(this, newOrderId+"Order Id not found..");
+           }
+
     }//GEN-LAST:event_txtOrderIdActionPerformed
 
     private void txtOrderIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOrderIdKeyReleased
-             String orderId=txtOrderId.getText();
-
-         try {
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-                String line=br.readLine();
-                while(line!=null){
-                    if(line.substring(0,5).equals(orderId)){
-                        break;
-                    }
-                    line=br.readLine();
-                }
-             
-             if(line!=null){
-                 String[] rowData = line.split(",");
-                 txtCustomerId.setText(rowData[1]);
-                 txtCustomerName.setText(rowData[2]);
-                  txtOrderQty.setText(rowData[3]+"");
-                double Total = Integer.parseInt(rowData[3])*Burger.burgerPrice;
+                 String newOrderId=txtOrderId.getText().trim();  
+           Burger burger = BurgerController.searchOrder(newOrderId);
+          
+           if(burger!=null){
+                 txtCustomerId.setText(burger.getCustomerId());
+                 txtCustomerName.setText(burger.getCustomerName());
+                 txtOrderQty.setText(burger.getOrderQty()+"");
+                double Total = burger.getOrderQty()*Burger.burgerPrice;
                 txtTotal.setText(String.format("%.2f", Total));
-                switch (Integer.parseInt(rowData[4])) {
+                switch (burger.getOrderStatus()) {
                     case Burger.PREPARING:
                         txtOrderStatus.setText("PREPARING");
 
@@ -378,41 +323,11 @@ public class SearchOrderForm extends javax.swing.JFrame {
                         break;
                     default:
                         break;
+                        
                 }
-             }else{
+           }else{
                 
-             }
-             
-             
-             
-//        String order_id = txtOrderId.getText();
-//        Burger burger=burgerList.searchBurger(order_id);
-//        if(burger!=null){
-//            txtCustomerId.setText(burger.getCustomerId());
-//            txtCustomerName.setText(burger.getCustomerName());
-//            txtOrderQty.setText(burger.getOrderQty()+"");
-//            double Total = burger.getOrderQty()*Burger.burgerPrice;
-//            txtTotal.setText(String.format("%.2f", Total));
-//            switch (burger.getOrderStatus()) {
-//                case Burger.PREPARING:
-//                    txtOrderStatus.setText("PREPARING");
-//                    
-//                    break;
-//                case Burger.DELIVERED:
-//                    txtOrderStatus.setText("DELIVERED");
-//                    
-//                    break;
-//                case Burger.CANCEL:
-//                    txtOrderStatus.setText("CANCEL");
-//                    
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-         } catch (IOException ex) {
-            
-         }
+           }
     }//GEN-LAST:event_txtOrderIdKeyReleased
 
   
@@ -437,6 +352,6 @@ public class SearchOrderForm extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void txtOrderIdKeyReleased() {
-       
+        System.out.println("");
     }
 }
