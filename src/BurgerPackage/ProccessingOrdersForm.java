@@ -131,7 +131,7 @@ public class ProccessingOrdersForm extends javax.swing.JFrame {
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
           int prepairId = Burger.PREPARING;
                 
-          BurgerList burgerList = BurgerController.searchCustomer();
+          BurgerList burgerList = BurgerController.importBurgers();
           
           DefaultTableModel dtm = (DefaultTableModel) tblBurgerDetails.getModel();
           dtm.setRowCount(0);
