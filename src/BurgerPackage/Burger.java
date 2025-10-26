@@ -118,5 +118,7 @@ public class Burger {
     public String toString(){
         return OrderId+","+customerId+","+CustomerName+","+orderQty+","+orderStatus;
     }
-   
+   public boolean equals(Burger burger){
+       return burger.OrderId.equals(this.OrderId);
+   }
 }

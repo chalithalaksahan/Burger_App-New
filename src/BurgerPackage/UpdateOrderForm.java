@@ -5,15 +5,7 @@
 
 package BurgerPackage;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -103,6 +95,7 @@ public class UpdateOrderForm extends javax.swing.JFrame {
             }
         });
 
+        txtCustomerId.setEditable(false);
         txtCustomerId.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtCustomerId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,6 +123,7 @@ public class UpdateOrderForm extends javax.swing.JFrame {
             }
         });
 
+        txtCustomerName.setEditable(false);
         txtCustomerName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtCustomerName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -287,33 +281,17 @@ public class UpdateOrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbOrderStatusActionPerformed
 
     private void txtOrderIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOrderIdKeyReleased
-        String orderId = txtOrderId.getText();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("Burger.txt"));
-            String line=br.readLine();
-            while(line!=null){
-                if(line.substring(0,5).equals(orderId)){
-                    break;
-                }
-                line = br.readLine();
-            }
-            if(line==null){
-              //  JOptionPane.showMessageDialog(this,orderId+" order Id not found");
-            }else{
-                String[] rowData = line.split(",");
-                txtCustomerId.setText(rowData[1]);
-                txtCustomerName.setText(rowData[2]);
-                txtOrderQty.setText(rowData[3]+"");
-                double Total = Integer.parseInt(rowData[3])*Burger.burgerPrice;
-                 txtTotal.setText(String.format("%.2f", Total));
-                cmbOrderStatus.setSelectedIndex(Integer.parseInt(rowData[4]));
-                
-            }
-            br.close();
-        } catch (IOException ex) {
-           
-        }
-      
+           String OrderId=txtOrderId.getText().trim();  
+           Burger burger = BurgerController.searchOrder(OrderId);
+          
+           if(burger!=null){
+                 txtCustomerId.setText(burger.getCustomerId());
+                 txtCustomerName.setText(burger.getCustomerName());
+                 txtOrderQty.setText(burger.getOrderQty()+"");
+                double Total = burger.getOrderQty()*Burger.burgerPrice;
+                txtTotal.setText(String.format("%.2f", Total));
+                cmbOrderStatus.setSelectedIndex(burger.getOrderStatus());
+           }
         
     }//GEN-LAST:event_txtOrderIdKeyReleased
 
@@ -321,40 +299,32 @@ public class UpdateOrderForm extends javax.swing.JFrame {
         String orderId = txtOrderId.getText();
         String custId = txtCustomerId.getText();
         String cusName=txtCustomerName.getText();
-        String orderQty = txtOrderQty.getText();
-        double Total = Integer.parseInt(orderQty)*Burger.burgerPrice;
+        int orderQty = Integer.parseInt(txtOrderQty.getText());
+        double Total = orderQty*Burger.burgerPrice;
         txtTotal.setText(String.format("%.2f", Total));
-        String orderStatus = String.format("%d", (cmbOrderStatus.getSelectedIndex()));
+        int orderStatus = cmbOrderStatus.getSelectedIndex();
+         
+          BurgerList burgerList = BurgerController.importBurgers();
+         
+         
+          for (int i = 0; i < burgerList.size(); i++) {
+            Burger currentBurger = burgerList.get(i);
+            if(currentBurger.getOrderId().equals(orderId)){
+                currentBurger.setOrderQty(orderQty);
+                currentBurger.setOrderStatus(orderStatus);
+            }
+        }
+         
         try {
-            Scanner input = new Scanner(new File("Burger.txt"));
-            FileWriter tempFileWriter= new FileWriter("TempBurger.txt",true);
-            while(input.hasNext()){
-                String line = input.nextLine();
-                if(line.substring(0,5).equals(orderId)){
-                    tempFileWriter.write(orderId+","+custId+","+cusName+","+orderQty+","+orderStatus+"\n");
-                }else{
-                    tempFileWriter.write(line+"\n");    
-                }   
+            boolean isAdded = BurgerController.updateBurger(burgerList);
+            if(isAdded){
+                JOptionPane.showMessageDialog(this, "Update Success");
                
-             }
-             input.close();
-             tempFileWriter.close();
-            
-             new File("Burger.txt").delete();
-           
-             
-             input = new Scanner(new File("TempBurger.txt"));
-             FileWriter fw=new FileWriter("Burger.txt");
-             while(input.hasNext()){
-                 fw.write(input.nextLine()+"\n");
-             }
-             fw.close();
-             input.close();
-             new File("TempBurger.txt").delete();
-             
-             JOptionPane.showMessageDialog(this, "Update Success");
+            }else{
+                JOptionPane.showMessageDialog(this, "Update Fail");
+                }
         } catch (IOException ex) {
-            
+           
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 

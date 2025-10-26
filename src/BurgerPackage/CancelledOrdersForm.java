@@ -5,9 +5,6 @@
 
 package BurgerPackage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -132,38 +129,34 @@ public class CancelledOrdersForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
-try {
-             String PrepairId = String.format("%d",Burger.CANCEL);
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-             DefaultTableModel dtm = (DefaultTableModel) tblBurgerDetails.getModel();
-              dtm.setRowCount(0);
-              String line=br.readLine();
-              
-              while(line!=null){
-                 
-                  String[] rowData = line.split(",");
-                    if(line.length()>=16){
-                    if(rowData[4].equals(PrepairId)){
-                       String total = String.format("%.2f", (Integer.parseInt(rowData[3])*Burger.burgerPrice));
-                       String[] rowData1={rowData[0],rowData[1],rowData[2],rowData[3],total};
-                       dtm.addRow(rowData1);
-                    }
-                  }
-                 line = br.readLine();
-              
-              }
-               br.close();
-         } catch (IOException ex) {
-         }
+ int cancelId = Burger.CANCEL;
+                
+          BurgerList burgerList = BurgerController.importBurgers();
+          
+          DefaultTableModel dtm = (DefaultTableModel) tblBurgerDetails.getModel();
+          dtm.setRowCount(0);
+            
+          for (int i = 0; i < burgerList.size(); i++) {
+            Burger currentBurger = burgerList.get(i);
+            
+            if(currentBurger.getOrderStatus()==(cancelId)){  
+                        String total = String.format("%.2f", (currentBurger.getOrderQty() * Burger.burgerPrice));
+                        String[] rowData1 = {
+                        currentBurger.getOrderId(), 
+                        currentBurger.getCustomerId(),
+                        currentBurger.getCustomerName(), 
+                        String.valueOf(currentBurger.getOrderQty()),  
+                        total
+                    };
+                    dtm.addRow(rowData1);
+            }else{
+                  
+            }
+            
+            
+        }        
 
-
-//      DefaultTableModel dtm = (DefaultTableModel) tblBurgerDetails.getModel();
-//      dtm.setRowCount(0);
-//    //  Burger[] burgerArray=burgerList.checkStatus(Burger.CANCEL);
-//        for (Burger burger : burgerArray) {
-//            Object[] rowData={burger.getOrderId(),burger.getCustomerId(),burger.getCustomerName(),burger.getOrderQty(),burger.getOrderQty()*Burger.burgerPrice};
-//            dtm.addRow(rowData);
-//        }
+                   
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void btnExit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExit1ActionPerformed
