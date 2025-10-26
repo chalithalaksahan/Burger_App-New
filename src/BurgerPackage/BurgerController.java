@@ -2,6 +2,7 @@
 package BurgerPackage;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class BurgerController {
        
          return null;
     }
-    public static BurgerList searchCustomer(){
+    public static BurgerList importBurgers(){
          try {
              BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
                 String line=br.readLine();
@@ -102,5 +103,16 @@ public class BurgerController {
          }
        
          return null;
+    }
+    
+    public static boolean updateBurger(BurgerList burgerList) throws IOException{
+        new File("Burger.txt").delete(); 
+        try (FileWriter fw = new FileWriter("Burger.txt",true)) {
+            for (int i = 0; i < burgerList.size(); i++) {
+                Burger burger = burgerList.get(i);
+                fw.write(burger.toString()+"\n");
+            }
+        }
+         return true;
     }
 }
