@@ -53,4 +53,54 @@ public class BurgerController {
         }
          return true;
     }
+    
+    public static Burger searchOrder(String orderId){
+        try {
+             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
+                String line=br.readLine();
+                BurgerList burgerList = new BurgerList();
+                while(line!=null){
+                   String[] rowData = line.split(",");
+                   Burger burger = new Burger(rowData[0],rowData[1],rowData[2],Integer.parseInt(rowData[3]),Integer.parseInt(rowData[4]));
+                   burgerList.add(burger);
+                    line=br.readLine();
+                }
+                br.close();
+                for (int i = 0; i < burgerList.size(); i++) {
+                    Burger burger = burgerList.get(i);
+                    if(burger.getOrderId().equals(orderId)){
+                     
+                        return burger;
+                    }
+                
+            }
+         } catch (IOException ex) {
+            
+         }
+       
+         return null;
+    }
+    public static BurgerList searchCustomer(){
+         try {
+             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
+                String line=br.readLine();
+                BurgerList burgerList = new BurgerList();
+                
+                while(line!=null){
+                   String[] rowData = line.split(",");
+                   Burger burger = new Burger(rowData[0],rowData[1],rowData[2],Integer.parseInt(rowData[3]),Integer.parseInt(rowData[4]));
+                   burgerList.add(burger);
+                    line=br.readLine();
+                    
+                }
+                br.close();
+               
+                return burgerList;
+            
+         } catch (IOException ex) {
+            
+         }
+       
+         return null;
+    }
 }
