@@ -5,10 +5,6 @@
 
 package BurgerPackage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -185,30 +181,33 @@ public class SearchCustomerForm extends javax.swing.JFrame {
 
     private void txtCustomerIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustomerIdKeyReleased
          String customerId = txtCustomerId.getText();
-          try {
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-             DefaultTableModel dtm = (DefaultTableModel) tblCustomerDetails.getModel();
-              dtm.setRowCount(0);
-              String line=br.readLine();
+          
+          BurgerList burgerList = BurgerController.searchCustomer();
+          
+          DefaultTableModel dtm = (DefaultTableModel) tblCustomerDetails.getModel();
+          dtm.setRowCount(0);
+            
+          for (int i = 0; i < burgerList.size(); i++) {
+            Burger currentBurger = burgerList.get(i);
+            
+            if(currentBurger.getCustomerId().equalsIgnoreCase(customerId)){
+                 txtCustomerName.setText(currentBurger.getCustomerName());
+                        String total = String.format("%.2f", (currentBurger.getOrderQty() * Burger.burgerPrice));
+                        String[] rowData1 = {
+                        currentBurger.getOrderId(), 
+                        String.valueOf(currentBurger.getOrderQty()),  
+                        total
+                    };
+                    dtm.addRow(rowData1);
+            }else{
+                  
+            }
+            
+            
+        }        
               
-              while(line!=null){
-                 
-                  String[] rowData = line.split(",");
-                  txtCustomerName.setText(rowData[2]);
-                    if(line.length()>=16){
-                    if(line.substring(6,16).equals(customerId)){
-                       String total = String.format("%.2f", (Integer.parseInt(rowData[3])*Burger.burgerPrice));
-                       String[] rowData1={rowData[0],rowData[3],total};
-                       dtm.addRow(rowData1);
-                    }
-                  }
-                 line = br.readLine();
-              
-              }
-               br.close();
-         } catch (IOException ex) {
-         }
-               
+             
+          
        
         
      
@@ -217,31 +216,29 @@ public class SearchCustomerForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCustomerIdKeyReleased
 
     private void txtCustomerIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustomerIdActionPerformed
-         String customerId = txtCustomerId.getText();
-          try {
-             BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-             DefaultTableModel dtm = (DefaultTableModel) tblCustomerDetails.getModel();
-              dtm.setRowCount(0);
-              String line=br.readLine();
-              
-              while(line!=null){
-                 
-                  String[] rowData = line.split(",");
-                    if(line.length()>=16){
-                    if(line.substring(6,16).equals(customerId)){
-                       String total = String.format("%.2f", (Integer.parseInt(rowData[3])*Burger.burgerPrice));
-                       String[] rowData1={rowData[0],rowData[3],total};
-                       dtm.addRow(rowData1);
-                    }
-                  }
-                 line = br.readLine();
-              
-              }
-               br.close();
-         } catch (IOException ex) {
-         }
-               
-         
+          String customerId = txtCustomerId.getText();
+          
+          BurgerList burgerList = BurgerController.searchCustomer();
+          
+          DefaultTableModel dtm = (DefaultTableModel) tblCustomerDetails.getModel();
+          dtm.setRowCount(0);
+            
+          for (int i = 0; i < burgerList.size(); i++) {
+            Burger currentBurger = burgerList.get(i);
+            
+            if(currentBurger.getCustomerId().equalsIgnoreCase(customerId)){
+                 txtCustomerName.setText(currentBurger.getCustomerName());
+                        String total = String.format("%.2f", (currentBurger.getOrderQty() * Burger.burgerPrice));
+                        String[] rowData1 = {
+                        currentBurger.getOrderId(), 
+                        String.valueOf(currentBurger.getOrderQty()),  
+                        total
+                    };
+                    dtm.addRow(rowData1);
+            }
+            
+            
+        }         
 
     }//GEN-LAST:event_txtCustomerIdActionPerformed
 
