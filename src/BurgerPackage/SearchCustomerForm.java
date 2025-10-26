@@ -182,7 +182,7 @@ public class SearchCustomerForm extends javax.swing.JFrame {
     private void txtCustomerIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCustomerIdKeyReleased
          String customerId = txtCustomerId.getText();
           
-          BurgerList burgerList = BurgerController.searchCustomer();
+          BurgerList burgerList = BurgerController.importBurgers();
           
           DefaultTableModel dtm = (DefaultTableModel) tblCustomerDetails.getModel();
           dtm.setRowCount(0);
@@ -218,7 +218,7 @@ public class SearchCustomerForm extends javax.swing.JFrame {
     private void txtCustomerIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustomerIdActionPerformed
           String customerId = txtCustomerId.getText();
           
-          BurgerList burgerList = BurgerController.searchCustomer();
+          BurgerList burgerList = BurgerController.importBurgers();
           
           DefaultTableModel dtm = (DefaultTableModel) tblCustomerDetails.getModel();
           dtm.setRowCount(0);
