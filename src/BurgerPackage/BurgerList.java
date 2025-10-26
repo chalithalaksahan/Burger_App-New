@@ -3,7 +3,7 @@ package BurgerPackage;
 
 
 
-class BurgerList {
+public class BurgerList {
 
     private Node first;
 
@@ -18,6 +18,7 @@ class BurgerList {
             Node temp = first;
             while(count<index-1){
                 temp=temp.next;
+                count++;
             }
             node.next=temp.next;
             temp.next=node;
@@ -72,7 +73,7 @@ class BurgerList {
             System.out.print(burger.toString()+", ");
             temp=temp.next;
         }
-        System.out.println(isEmpty() ? "Empty" : "\b\b}");
+        System.out.println(isEmpty() ? "Empty}" : "\b\b}");
     }
     public boolean isEmpty(){
         return first==null;
@@ -99,7 +100,7 @@ class BurgerList {
         int index = 0;
         Node temp = first;
         while(temp!=null){
-            if(burger.getOrderId().equals(temp.burger.getOrderId())){
+            if(temp.burger.equals(burger)){
                 return index;
             }
             index++;
@@ -128,6 +129,7 @@ class BurgerList {
 		return false;
 		
     }
+    
     class Node{
         private Burger burger;
         private Node next;
