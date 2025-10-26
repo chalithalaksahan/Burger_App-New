@@ -129,7 +129,7 @@ public class DeliveredOrdersForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
-             int deliveredId = Burger.DELIVERED;
+          int deliveredId = Burger.DELIVERED;
                 
           BurgerList burgerList = BurgerController.searchCustomer();
           
