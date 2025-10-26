@@ -299,7 +299,7 @@ public class SearchOrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtOrderIdActionPerformed
 
     private void txtOrderIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOrderIdKeyReleased
-                 String newOrderId=txtOrderId.getText().trim();  
+           String newOrderId=txtOrderId.getText().trim();  
            Burger burger = BurgerController.searchOrder(newOrderId);
           
            if(burger!=null){
