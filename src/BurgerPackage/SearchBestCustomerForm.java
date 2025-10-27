@@ -5,18 +5,7 @@
 
 package BurgerPackage;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
-import javax.swing.InputMap;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  *
@@ -133,132 +122,83 @@ public class SearchBestCustomerForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void tblBestCustomerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblBestCustomerFocusGained
-          try {
-            BufferedReader br =new BufferedReader(new FileReader("Burger.txt"));
-            String line=br.readLine();
-
-            new FileWriter("dupRemoveFile.txt", true).close();
+        BurgerList burgerList = BurgerController.importBurgers();
+        BurgerList newList = new BurgerList();
+         
+        for (int i = 0; i < burgerList.size(); i++) {
+             Burger burger = burgerList.get(i);
              
-            while(line!=null){
-                  
-                  String[] rowData = line.split(",");
-                  
-                   if (rowData.length > 1) {
-                  String cusID = rowData[1];
-                  
-                  boolean duplicate = false;
-                  BufferedReader checkBr = new BufferedReader(new FileReader("dupRemoveFile.txt"));
-                  String checkLine;
-                  
-                  while((checkLine=checkBr.readLine())!=null){
-                      if(checkLine.equals(cusID)){
-                          duplicate = true;
-                          break;
-                      }
-                  }
-                  if(!duplicate){
-                          FileWriter dupRemovefile = new FileWriter("dupRemoveFile.txt",true);
-                          dupRemovefile.write(cusID+"\n");
-                          dupRemovefile.close();
-                      }
-                  }
-                  line=br.readLine();
-                   
-            }
-            br.close();
-            
-            //-----------------------------------------------------------------------------------------------
-            BufferedReader findBr = new BufferedReader (new FileReader("dupRemoveFile.txt"));
-            String findLine = findBr.readLine();
-            
-             List<String> burgerData = new ArrayList<>();
-             BufferedReader findCus = new BufferedReader(new FileReader("Burger.txt"));
-             String cusLine = findCus.readLine();
-             
-             while(cusLine!=null){
-                burgerData.add(cusLine);
-                cusLine = findCus.readLine();
-            }
-            findCus.close();
-               
+             boolean isDuplicate = false;
+             for (int j = 0; j < newList.size(); j++) {
                 
-            BufferedWriter tempTotal = new BufferedWriter(new FileWriter("temp.txt"));
-            
-            while(findLine!=null){
-                int totalQty = 0;
-                String name ="";
-                for (String burgerLine : burgerData) {
-                    String[] ar = burgerLine.split(",");
-                    if(ar.length>=4 && findLine.equals(ar[1])){
-                        totalQty += Integer.parseInt(ar[3]);
-                        name = ar[2];
-                    }
-                        
-                  
-                }
-                    String quantity = String.format("%d",totalQty);
-                    tempTotal.write(findLine+","+name+","+quantity+"\n");
-                    findLine = findBr.readLine();
+                    Burger newBurger = newList.get(j); 
+                 if(burger.getCustomerId().equals(newBurger.getCustomerId())){ 
                     
-                   
-                }
-                tempTotal.close();
-                findBr.close();
-           // ----------------------------------------------------------------------------------------------------------------
-           
-            List<String> lines = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new FileReader("temp.txt"));
-            String line1;
-            
-            
-           while ((line1 = reader.readLine()) != null) {
-                lines.add(line1);
-            }
-            reader.close();
-            
-                lines.sort((a, b) -> {
-                int qtyA = Integer.parseInt(a.split(",")[2]);
-                int qtyB = Integer.parseInt(b.split(",")[2]);
-                return qtyB - qtyA; 
-            });
-            BufferedWriter writer = new BufferedWriter(new FileWriter("sorted_file.txt"));
-            for (String sortedLine : lines) {
-                writer.write(sortedLine);
-                writer.newLine();
-            }
-            writer.close();
-            
-        BufferedReader brTable =new BufferedReader(new FileReader("sorted_file.txt"));       
-        DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
-        dtm.setRowCount(0);
-        String tblLine = brTable.readLine();
-        
-          while(tblLine!=null){
-                 
-                  String[] rowData = tblLine.split(",");
-                    if(tblLine.length()>=16){
-                    
-                       String total = String.format("%.2f", (Integer.parseInt(rowData[2])*Burger.burgerPrice));
-                       String[] rowData1={rowData[0],rowData[1],total};
-                       dtm.addRow(rowData1);
-                    
-                  }
-                 tblLine = brTable.readLine();
-              
-              }
-          brTable.close();
-           
-         } catch (IOException ex) {
-             
-         }
-        //--------------------------------------------------------------------------------------------------------------------------       
+                     isDuplicate = true;
+                     break;
+                 }
+             }
+             if(!isDuplicate){
+                 newList.add(burger);
+             }
+        }
        
-//        Burger[] burgerArray=burgerList.findBestCustomer();
-//    
-//        for (Burger burger : burgerArray) {
-//            Object[] rowData={burger.getCustomerId(),burger.getCustomerName(),burger.getOrderQty()*Burger.burgerPrice};
-//            dtm.addRow(rowData);
-//        }
+        
+        
+        BurgerList quList = new BurgerList();
+        
+        for (int i = 0; i <newList.size(); i++) {
+                Burger newBurger = newList.get(i); 
+                int total = 0;
+            for (int j = 0; j < burgerList.size(); j++) {
+                 Burger burger = burgerList.get(j);
+                if(newBurger.getCustomerId().equals(burger.getCustomerId())){
+                    total+=burger.getOrderQty();
+                }
+                
+            }
+             Burger tempBurger = new Burger(
+                     newBurger.getOrderId(),
+                  newBurger.getCustomerId(),
+                 newBurger.getCustomerName(),
+                    total,
+                           newBurger.getOrderStatus()
+                     
+            );
+             
+             quList.add(tempBurger);
+            
+        }
+        
+         
+         for (int i = 0; i < quList.size()-1; i++) {
+             for (int j = 0; j < quList.size()-i-1; j++) {
+                 Burger current = quList.get(j);
+                 Burger next = quList.get(j+1);
+                 
+                 if(current.getOrderQty()<next.getOrderQty()){
+                     
+                     quList.remove(j);
+                     quList.add(j,next);
+                     quList.remove(j+1);
+                     quList.add(j+1,current);
+                     
+                 }
+             }
+        }
+         
+         DefaultTableModel dtm = (DefaultTableModel) tblBestCustomer.getModel();
+         dtm.setRowCount(0);
+          
+        for (int i = 0; i < quList.size(); i++) {
+            Burger burger = quList.get(i);
+          
+            Object[] rowData={burger.getCustomerId(),burger.getCustomerName(),burger.getOrderQty()*Burger.burgerPrice};
+            dtm.addRow(rowData);
+        }
+       
+    
+    
     }//GEN-LAST:event_tblBestCustomerFocusGained
 
 
